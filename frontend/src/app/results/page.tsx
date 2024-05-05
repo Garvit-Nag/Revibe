@@ -24,7 +24,7 @@ const Results: React.FC<ResultsProps> = ({ results }) => {
       <BasePage>
         <div className="flex items-center flex-col">
           <Image src="/images/error-cat.svg" width={500} height={300} alt="Error"/>
-          <div className="flex flex-col items-center gap-5"><p>
+          <div className="flex flex-col items-center gap-5 container"><p className="text-center">
             Oh, it looks like you took a wrong turn. This secret chamber of
             knowledge isn’t just lying around for direct visits!
           </p>
