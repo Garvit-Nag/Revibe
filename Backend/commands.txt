@@ -1,0 +1,3 @@
+Backend\my_project_env\Scripts\activate
+cd C:\Users\garvi\Desktop\Website\Backend
+python index.py
