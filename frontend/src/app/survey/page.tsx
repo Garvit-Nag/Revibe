@@ -2,7 +2,7 @@ import BasePage from "@/components/BaseLayout"
 
 const page = () => {
   return (
-    <BasePage>Hi</BasePage>
+    <BasePage>Get User Data Here</BasePage>
   )
 }
 

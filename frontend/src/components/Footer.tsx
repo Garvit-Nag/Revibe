@@ -55,14 +55,14 @@ const navigation: {
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full">
+    <footer className="w-full z-50">
       <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <nav className="flex flex-wrap justify-center">
           {navigation.main.map((item) => (
             <div key={item.name} className="px-5 py-2">
               <a
                 href={item.href}
-                className="text-sm text-gray-600 hover:text-gray-800"
+                className="text-sm text-gray-600 hover:text-white ease-in-out duration-400"
               >
                 {item.name}
               </a>
@@ -74,7 +74,7 @@ const Footer: React.FC = () => {
             <a
               key={item.name}
               href={item.href}
-              className="text-gray-600 hover:text-gray-800"
+              className="text-gray-600 hover:text-white ease-in-out duration-400"
             >
               <span className="sr-only">{item.name}</span>
               {item.icon && (

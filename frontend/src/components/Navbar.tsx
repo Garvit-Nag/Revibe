@@ -55,7 +55,7 @@ const NavbarComponent = () => {
             as={Link}
             color="primary"
             target="_blank"
-            href="https://github.com/abhisheksharm-3/revibe"
+            href="https://github.com/garvitcpp"
             variant="ghost"
             startContent={<RiGithubLine />}
           >
