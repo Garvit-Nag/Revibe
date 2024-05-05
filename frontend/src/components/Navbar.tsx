@@ -68,7 +68,7 @@ const NavbarComponent = () => {
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.label}-${index}`}>
             <Link
-              color={location.pathname === item.href ? "primary" : "foreground"}
+              color={pathname === item.href ? "primary" : "foreground"}
               href={item.href}
               className="w-full"
               size="lg"
