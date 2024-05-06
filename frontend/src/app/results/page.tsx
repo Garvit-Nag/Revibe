@@ -6,11 +6,8 @@ import { Button } from "@nextui-org/react";
 import { RiHome2Line } from "@remixicon/react";
 import Image from "next/image";
 
-type ResultsProps = {
-  results?: any; // Define more specific type based on expected JSON structure
-}
 
-const ResultComponent: React.FC<ResultsProps> = ({ results }) => {
+const Results: React.FC<{ results?: any }> = ({ results }) => {
   const router = useRouter();
 
   // Function to handle return to home
