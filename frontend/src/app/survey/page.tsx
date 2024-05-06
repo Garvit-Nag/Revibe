@@ -6,6 +6,7 @@ import musicData from "@/constants/data";
 import { Button, Card, CardHeader, Image, Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 interface Song {
   title: string;
@@ -87,14 +88,9 @@ const SurveyPage = () => {
     };
 
     try {
-      const response = await fetch(`http://127.0.0.1:5000/recommend`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-      const data = await response.json();
+      const apiRoute = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const response = await axios.post(apiRoute as string, payload);
+      const data = await response.data;
 
       // Store the data in localStorage
       localStorage.setItem('surveyResults', JSON.stringify(data));
