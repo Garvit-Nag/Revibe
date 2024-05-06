@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BasePage from "@/components/BaseLayout";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
@@ -9,6 +9,14 @@ import Image from "next/image";
 
 const ResultComponent = () => {
   const router = useRouter();
+  const [results, setResults] = useState(null);
+
+  useEffect(() => {
+    const data = localStorage.getItem('surveyResults');
+    if (data) {
+      setResults(JSON.parse(data));
+    }
+  }, []);
 
   // Function to handle return to home
   const handleGoHome = () => {

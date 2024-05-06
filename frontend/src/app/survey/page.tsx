@@ -5,6 +5,7 @@ import { Tabs } from "@/components/ui/tabs";
 import musicData from "@/constants/data";
 import { Button, Card, CardHeader, Image, Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface Song {
   title: string;
@@ -30,6 +31,7 @@ interface CustomInputs {
 }
 
 const SurveyPage = () => {
+  const router = useRouter();
   const [selectedItems, setSelectedItems] = useState<{ song: Song | null, artist: Artist | null, genre: Genre | null }>({ song: null, artist: null, genre: null });
   const [customInputs, setCustomInputs] = useState<CustomInputs>({ song: "", artist: "", genre: "", songArtist: "" });
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -93,7 +95,12 @@ const SurveyPage = () => {
         body: JSON.stringify(payload)
       });
       const data = await response.json();
-      console.log("Response received:", data);
+
+      // Store the data in localStorage
+      localStorage.setItem('surveyResults', JSON.stringify(data));
+
+      // Redirect to the results page
+      router.push('/results');
     } catch (error) {
       console.error("Error submitting form:", error);
     }
