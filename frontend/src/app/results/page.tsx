@@ -6,7 +6,7 @@ import { Button } from "@nextui-org/react";
 import { RiHome2Line } from "@remixicon/react";
 import Image from "next/image";
 
-interface ResultsProps {
+type ResultsProps = {
   results?: any; // Define more specific type based on expected JSON structure
 }
 
