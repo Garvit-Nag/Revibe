@@ -45,3 +45,5 @@ tzdata==2023.4
 urllib3==2.2.1
 virtualenv==20.25.0
 Werkzeug==3.0.2
+flask-cors==4.0.1
+python-dotenv==1.0.1

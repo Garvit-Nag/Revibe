@@ -73,7 +73,7 @@ const SurveyPage = () => {
     setSubmitFlag(true);
   };
 
-  const submitForm = () => {
+  const submitForm = async () => {
     const { song, artist, genre } = selectedItems;
     const { song: customSong, artist: customArtist, genre: customGenre } = customInputs;
 
@@ -83,7 +83,19 @@ const SurveyPage = () => {
       genre: genre ? genre.name : customGenre,
     };
 
-    console.log("Submitting:", payload);
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/recommend`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      console.log("Response received:", data);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
   const tabs = [
     {

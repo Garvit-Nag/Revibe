@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "@nextui-org/react": "^2.3.6",
     "@radix-ui/react-navigation-menu": "^1.1.4",

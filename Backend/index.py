@@ -3,10 +3,10 @@ import pandas as pd
 from joblib import load
 from joblib import dump
 import numpy as np
-
-
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 # Load the original dataset
 tracks = pd.read_csv('tracks.csv')
 
@@ -29,11 +29,11 @@ dump(label_encoder_artists, 'label_encoder_artists.joblib')
 dump(label_encoder_genre, 'label_encoder_genre.joblib')
 dump(label_encoder_album, 'label_encoder_album.joblib')
 
-@app.route('/recommend', methods=['GET'])
+@app.route('/recommend', methods=['POST'])
 def recommend():
-    song_name = request.args.get('song_name')
+    song_name = request.args.get('song')
     genre = request.args.get('genre')
-    artist_name = request.args.get('artist_name')
+    artist_name = request.args.get('artist')
 
     recommendations = get_recommendations(song_name, genre, artist_name, tracks, scaled_df, scaler, kmeans, label_encoder_artists, label_encoder_genre)
 
