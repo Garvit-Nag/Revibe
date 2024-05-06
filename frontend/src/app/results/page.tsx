@@ -3,9 +3,15 @@ import React, { useEffect, useState } from "react";
 import BasePage from "@/components/BaseLayout";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
-import { RiHome2Line } from "@remixicon/react";
+import { RiHome2Line, RiPlayCircleLine } from "@remixicon/react";
 import Image from "next/image";
 import { BackgroundBeams } from "@/components/ui/background-beams";
+import {
+  GlowingStarsBackgroundCard,
+  GlowingStarsDescription,
+  GlowingStarsTitle,
+} from "@/components/ui/glowing-stars";
+import { SparklesCore } from "@/components/ui/sparkles";
 interface Song {
   artist: string;
   song_name: string;
@@ -58,31 +64,26 @@ const ResultComponent = () => {
   }
   const RenderContent = () => {
     if (Array.isArray(results)) {
-      // Rendering list of songs
       return (
-        <div className="overflow-hidden">
-          <h1 className="text-xl font-bold text-gray-800">
-            Music Recommendations
-          </h1>
-          <ul className="mt-4">
+        <div className="relative overflow-auto max-h-[500px] z-40 scrollbar-hide container">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-h-full">
             {results.map((item, index) => (
-              <li key={index} className="p-3 mb-2 border-b border-gray-300">
-                <p>
-                  <span className="font-semibold">Artist:</span> {item.artist}
-                </p>
-                <p>
-                  <span className="font-semibold">Song:</span> {item.song_name}
-                </p>
-              </li>
+              <GlowingStarsBackgroundCard key={index}>
+                <GlowingStarsTitle>{item.song_name}</GlowingStarsTitle>
+                <div className="flex justify-between items-center">
+                  <GlowingStarsDescription>
+                    {item.artist}
+                  </GlowingStarsDescription>
+                  <div className="h-10 w-10 rounded-full bg-[hsla(0,0%,100%,.1)] flex items-center justify-center cursor-pointer hover:bg-[hsla(0,0%,100%,.2)]">
+                    <RiPlayCircleLine className="text-white text-2xl" />
+                  </div>
+                </div>
+              </GlowingStarsBackgroundCard>
             ))}
-          </ul>
+          </div>
         </div>
       );
-    } else if (typeof results === "string") {
-      // Rendering a message (no songs found)
-      return <p>{results}</p>;
     } else {
-      // Handle null or unexpected types
       return <p>Loading... or no data available.</p>;
     }
   };
@@ -90,6 +91,31 @@ const ResultComponent = () => {
   // Render this block if results are provided
   return (
     <BasePage>
+      <div className="h-[40rem] lg:h-[36rem] w-full flex flex-col items-center justify-center overflow-hidden rounded-md mt-10">
+        <h1 className="md:text-4xl text-xl lg:text-6xl font-bold text-center text-white relative z-20">
+          Your Recommendations
+        </h1>
+        <div className="w-[40rem] h-40 relative">
+          {/* Gradients */}
+          <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
+          <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
+          <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] w-1/4 blur-sm" />
+          <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
+
+          {/* Core component */}
+          <SparklesCore
+            background="transparent"
+            minSize={0.4}
+            maxSize={1}
+            particleDensity={1200}
+            className="w-full h-full"
+            particleColor="#FFFFFF"
+          />
+
+          {/* Radial Gradient to prevent sharp edges */}
+          <div className="absolute inset-0 w-full bg-[#09090b] h-full flex items-center [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+        </div>
+      </div>
       <RenderContent />
       <BackgroundBeams />
     </BasePage>
