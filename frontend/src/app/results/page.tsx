@@ -7,7 +7,7 @@ import { RiHome2Line } from "@remixicon/react";
 import Image from "next/image";
 
 
-const ResultComponent = ({results}: {results?: unknown;}) => {
+const ResultComponent = ({results}: {results?: string;}) => {
   const router = useRouter();
 
   // Function to handle return to home
