@@ -7,7 +7,7 @@ import { RiHome2Line } from "@remixicon/react";
 import Image from "next/image";
 
 
-const ResultComponent = ({results}: {results?: string;}) => {
+const ResultComponent = () => {
   const router = useRouter();
 
   // Function to handle return to home
@@ -15,7 +15,7 @@ const ResultComponent = ({results}: {results?: string;}) => {
     router.push("/survey");
   };
 
-  if (!results) {
+  if (false) {
     // Render this block if results are not provided
     return (
       <BasePage>
