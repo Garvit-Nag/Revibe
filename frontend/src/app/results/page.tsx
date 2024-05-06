@@ -10,7 +10,7 @@ interface ResultsProps {
   results?: any; // Define more specific type based on expected JSON structure
 }
 
-const Results: React.FC<ResultsProps> = ({ results }) => {
+const ResultComponent: React.FC<ResultsProps> = ({ results }) => {
   const router = useRouter();
 
   // Function to handle return to home
@@ -38,4 +38,4 @@ const Results: React.FC<ResultsProps> = ({ results }) => {
   return <BasePage>Results Here</BasePage>;
 };
 
-export default Results;
+export default ResultComponent;
