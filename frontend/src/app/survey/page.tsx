@@ -82,7 +82,7 @@ const SurveyPage = () => {
 
     const payload = {
       song: song ? `${song.title.toLowerCase()} - ${song.artist.toLowerCase()}` : (customSong && customSongArtist ? `${customSong.toLowerCase()} - ${customSongArtist.toLowerCase()}` : customSong),
-      artist: artist ? artist.name.toLowerCase() : customArtist.toLowerCase(),
+      artist: artist ? artist.name : customArtist,
       genre: genre ? genre.name.toLowerCase() : customGenre.toLowerCase(),
     };
 

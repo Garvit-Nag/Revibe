@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
 import { RiHome2Line } from "@remixicon/react";
 import Image from "next/image";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 interface Song {
   artist: string;
   song_name: string;
@@ -59,16 +60,25 @@ const ResultComponent = () => {
     if (Array.isArray(results)) {
       // Rendering list of songs
       return (
-        <ul className="mt-4">
-          {results.map((item, index) => (
-            <li key={index} className="p-3 mb-2 border-b border-gray-300">
-              <p><span className="font-semibold">Artist:</span> {item.artist}</p>
-              <p><span className="font-semibold">Song:</span> {item.song_name}</p>
-            </li>
-          ))}
-        </ul>
+        <div className="overflow-hidden">
+          <h1 className="text-xl font-bold text-gray-800">
+            Music Recommendations
+          </h1>
+          <ul className="mt-4">
+            {results.map((item, index) => (
+              <li key={index} className="p-3 mb-2 border-b border-gray-300">
+                <p>
+                  <span className="font-semibold">Artist:</span> {item.artist}
+                </p>
+                <p>
+                  <span className="font-semibold">Song:</span> {item.song_name}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
       );
-    } else if (typeof results === 'string') {
+    } else if (typeof results === "string") {
       // Rendering a message (no songs found)
       return <p>{results}</p>;
     } else {
@@ -81,6 +91,7 @@ const ResultComponent = () => {
   return (
     <BasePage>
       <RenderContent />
+      <BackgroundBeams />
     </BasePage>
   );
 };
