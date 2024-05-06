@@ -81,9 +81,9 @@ const SurveyPage = () => {
     const { song: customSong, artist: customArtist, genre: customGenre, songArtist: customSongArtist } = customInputs;
 
     const payload = {
-      song: song ? `${song.title} - ${song.artist}` : (customSong && customSongArtist ? `${customSong} - ${customSongArtist}` : customSong),
-      artist: artist ? artist.name : customArtist,
-      genre: genre ? genre.name : customGenre,
+      song: song ? `${song.title.toLowerCase()} - ${song.artist.toLowerCase()}` : (customSong && customSongArtist ? `${customSong.toLowerCase()} - ${customSongArtist.toLowerCase()}` : customSong),
+      artist: artist ? artist.name.toLowerCase() : customArtist.toLowerCase(),
+      genre: genre ? genre.name.toLowerCase() : customGenre.toLowerCase(),
     };
 
     try {
