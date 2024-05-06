@@ -41,7 +41,7 @@ const musicData = {
       },
       {
         name: "Karan Aujla",
-        image: "https://static.qobuz.com/images/covers/5a/lr/pf2ugope6lr5a_600.jpg"
+        image: "https://i1.sndcdn.com/artworks-lEOOJyGN2vI0MX9L-7KKz0A-t500x500.jpg"
       },
       {
         name: "Badshah",
