@@ -7,8 +7,8 @@ const About = () => {
       <div className="overflow-hidden">
         <section
           id="features"
-          className="relative block px-6 py-10 md:py-20 md:px-10 overflow-y-scroll scrollbar-hide"
-        >
+          className="relative block px-6 py-10 md:py-20 md:px-10"
+        ><div className="overflow-y-scroll max-h-[400px] scrollbar-hide">
           <div className="relative mx-auto max-w-5xl text-center">
             <span className="text-gray-400 my-3 flex items-center justify-center font-medium uppercase tracking-wider">
               Why Revibe?
@@ -122,6 +122,7 @@ const About = () => {
                 Our algorithms constantly learn and adapt, ensuring that your recommendations stay fresh and relevant.
               </p>
             </div>
+          </div>
           </div>
         </section>
       </div>

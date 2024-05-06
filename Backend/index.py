@@ -6,52 +6,52 @@ import numpy as np
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})  # Allow CORS for all routes
 # Load the original dataset
 tracks = pd.read_csv('tracks.csv')
 
-# Load the preprocessed dataset
+# Load the necessary data and models
+tracks = pd.read_csv('tracks.csv')
 scaled_df = pd.read_csv('scaled_df.csv')
-
-# Load the trained models
 scaler = load('scaler.joblib')
 kmeans = load('revibe.joblib')
-
-# Load the encoders
 label_encoder_artists = load('label_encoder_artists.joblib')
 label_encoder_genre = load('label_encoder_genre.joblib')
-label_encoder_album = load('label_encoder_album.joblib')
-
-# Re-save the models
-dump(scaler, 'scaler.joblib')
-dump(kmeans, 'revibe.joblib')
-dump(label_encoder_artists, 'label_encoder_artists.joblib')
-dump(label_encoder_genre, 'label_encoder_genre.joblib')
-dump(label_encoder_album, 'label_encoder_album.joblib')
 
 @app.route('/recommend', methods=['POST'])
 def recommend():
-    song_name = request.args.get('song')
-    genre = request.args.get('genre')
-    artist_name = request.args.get('artist')
+    try:
+        # Get the JSON data from the frontend
+        data = request.get_json()
 
-    recommendations = get_recommendations(song_name, genre, artist_name, tracks, scaled_df, scaler, kmeans, label_encoder_artists, label_encoder_genre)
+        # Extract song, artist, and genre from the JSON data
+        song_name = data.get('song', '')
+        artist_name = data.get('artist', '')
+        genre_name = data.get('genre', '')
 
-    return jsonify(recommendations)
+        # Call function to get recommendations based on received data
+        recommendations = get_recommendations(song_name, genre_name, artist_name, tracks, scaled_df, scaler, kmeans, label_encoder_artists, label_encoder_genre)
+
+        # Return recommendations as JSON response
+        return jsonify(recommendations)
+
+    except Exception as e:
+        # Handle any exceptions and return an error message
+        error_message = f"An error occurred: {str(e)}"
+        return jsonify({'error': error_message}), 500
+
 def get_recommendations(song_name, genre, artist_name, tracks, scaled_df, scaler, kmeans, label_encoder_artists, label_encoder_genre):
-    # Step 3: Query the database based on user input
-    matching_songs = tracks
+    # Check if either song_name is provided or both genre and artist_name are provided
     if song_name:
-        matching_songs = matching_songs[matching_songs['track_name'].str.contains(song_name, case=False)]
-    if genre:
-        matching_songs = matching_songs[matching_songs['track_genre'].str.contains(genre, case=False)]
-    if artist_name:
-        matching_songs = matching_songs[matching_songs['artists'].str.contains(artist_name, case=False)]
+        # Step 3: Query the database based on song_name
+        matching_songs = tracks[tracks['track_name'].str.contains(song_name, case=False)]
+    elif genre and artist_name:
+        # Step 3: Query the database based on genre and artist_name
+        matching_songs = tracks[tracks['track_genre'].str.contains(genre, case=False) & tracks['artists'].str.contains(artist_name, case=False)]
+    else:
+        return "Error: You must provide either a song name or both genre and artist name."
 
-    # Check if at least one field is filled
-    if not song_name and not (genre and artist_name):
-        return "Error: You must fill at least one field."
-    elif len(matching_songs) == 0:
+    if len(matching_songs) == 0:
         return "No matching songs found."
     else:
         # Step 4: User Input for Song Selection
@@ -63,7 +63,7 @@ def get_recommendations(song_name, genre, artist_name, tracks, scaled_df, scaler
                                                                         'danceability', 'energy', 'acousticness', 'instrumentalness',
                                                                         'speechiness', 'liveness', 'valence']].values.reshape(1, -1)
         else:
-            # If skipping, calculate average of selected features for the genre and artist
+            # Calculate average of selected features for the genre and artist
             avg_features = matching_songs.loc[:, ['tempo', 'loudness', 'danceability', 'energy', 'acousticness',
                                                    'instrumentalness', 'speechiness', 'liveness', 'valence']].mean().values
             # Use genre and artist to get their encoded values
@@ -101,6 +101,6 @@ def get_recommendations(song_name, genre, artist_name, tracks, scaled_df, scaler
                                     zip(recommended_song_names, recommended_artist_names)]
 
             return recommendations_list
-        
+
 if __name__ == '__main__':
     app.run(debug=True)

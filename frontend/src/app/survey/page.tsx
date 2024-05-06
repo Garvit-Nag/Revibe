@@ -26,11 +26,12 @@ interface CustomInputs {
   song: string;
   artist: string;
   genre: string;
+  songArtist: string;
 }
 
 const SurveyPage = () => {
   const [selectedItems, setSelectedItems] = useState<{ song: Song | null, artist: Artist | null, genre: Genre | null }>({ song: null, artist: null, genre: null });
-  const [customInputs, setCustomInputs] = useState<CustomInputs>({ song: "", artist: "", genre: "" });
+  const [customInputs, setCustomInputs] = useState<CustomInputs>({ song: "", artist: "", genre: "", songArtist: "" });
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [submitFlag, setSubmitFlag] = useState(false);  // Flag to control submission timing
 
@@ -51,7 +52,7 @@ const SurveyPage = () => {
   const handleSelect = (type: keyof typeof selectedItems, item: Song | Artist | Genre) => {
     if (type === 'song') {
       setSelectedItems({ song: item as Song, artist: null, genre: null });
-      setCustomInputs({ song: "", artist: "", genre: "" });
+      setCustomInputs({ song: "", artist: "", genre: "" , songArtist: ""});
     } else {
       setSelectedItems(prev => ({ ...prev, [type]: item, song: null }));
       setCustomInputs(prev => ({ ...prev, [type]: "", song: "" }));
@@ -59,14 +60,14 @@ const SurveyPage = () => {
   };
 
   const handleInputChange = (type: keyof CustomInputs, value: string) => {
-    if (type === 'song') {
-      setCustomInputs(prev => ({ ...prev, [type]: value, artist: "", genre: "" }));
-      setSelectedItems({ song: null, artist: null, genre: null });
+    setCustomInputs(prev => ({ ...prev, [type]: value }));
+    if (type === 'song' || type === 'songArtist') {
+      setSelectedItems({ song: null, artist: null, genre: null });  // Clear selected items when entering custom song info
     } else {
-      setCustomInputs(prev => ({ ...prev, [type]: value }));
-      setSelectedItems(prev => ({ ...prev, song: null }));
+      setSelectedItems(prev => ({ ...prev, song: null }));  // Clear selected song when entering custom artist or genre info
     }
   };
+  
 
   const handleSubmit = () => {
     setErrorMessage("");
@@ -75,10 +76,10 @@ const SurveyPage = () => {
 
   const submitForm = async () => {
     const { song, artist, genre } = selectedItems;
-    const { song: customSong, artist: customArtist, genre: customGenre } = customInputs;
+    const { song: customSong, artist: customArtist, genre: customGenre, songArtist: customSongArtist } = customInputs;
 
     const payload = {
-      song: song ? `${song.title} - ${song.artist}` : customSong,
+      song: song ? `${song.title} - ${song.artist}` : (customSong && customSongArtist ? `${customSong} - ${customSongArtist}` : customSong),
       artist: artist ? artist.name : customArtist,
       genre: genre ? genre.name : customGenre,
     };
@@ -127,10 +128,13 @@ const SurveyPage = () => {
               ))}
             </div>
             <p className="text-sm sm:text-base">OR</p>
-            <Input
+            <div className="flex w-full gap-2 flex-col lg:flex-row"><Input
               label="Enter Your Own Song"
               onChange={(e) => handleInputChange('song', e.target.value)}
-            />
+            /><Input
+            label="Enter Artist Name"
+            onChange={(e) => handleInputChange('songArtist', e.target.value)}
+          /></div>
             {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
             <Button onPress={handleSubmit}>Submit</Button>
             <Meteors number={20} />
