@@ -55,7 +55,7 @@ const SurveyPage = () => {
   const handleSelect = (type: keyof typeof selectedItems, item: Song | Artist | Genre) => {
     if (type === 'song') {
       setSelectedItems({ song: item as Song, artist: null, genre: null });
-      setCustomInputs({ song: "", artist: "", genre: "" , songArtist: ""});
+      setCustomInputs({ song: "", artist: "", genre: "", songArtist: "" });
     } else {
       setSelectedItems(prev => ({ ...prev, [type]: item, song: null }));
       setCustomInputs(prev => ({ ...prev, [type]: "", song: "" }));
@@ -71,7 +71,6 @@ const SurveyPage = () => {
     }
   };
   
-
   const handleSubmit = () => {
     setErrorMessage("");
     setSubmitFlag(true);
@@ -80,27 +79,47 @@ const SurveyPage = () => {
   const submitForm = async () => {
     const { song, artist, genre } = selectedItems;
     const { song: customSong, artist: customArtist, genre: customGenre, songArtist: customSongArtist } = customInputs;
-
-    const payload = {
-      song: song ? `${song.title.toLowerCase()} - ${song.artist.toLowerCase()}` : (customSong && customSongArtist ? `${customSong.toLowerCase()} - ${customSongArtist.toLowerCase()}` : customSong),
-      artist: artist ? artist.name : customArtist,
-      genre: genre ? genre.name.toLowerCase() : customGenre.toLowerCase(),
-    };
-
+  
+    let payload;
+    if (song || (customSong && customSongArtist)) {
+      // Option 1: Song and Artist
+      payload = {
+        song: song ? `${song.title.toLowerCase()} - ${song.artist.toLowerCase()}` : `${customSong.toLowerCase()} - ${customSongArtist.toLowerCase()}`,
+        artist: "",
+        genre: ""
+      };
+    } else if ((artist || customArtist) && (genre || customGenre)) {
+      // Option 2: Artist and Genre
+      payload = {
+        song: "",
+        artist: artist ? artist.name : customArtist,
+        genre: genre ? genre.name.toLowerCase() : customGenre.toLowerCase()
+      };
+    } else {
+      setErrorMessage("Invalid input. Please provide either a song and artist, or an artist and genre.");
+      return;
+    }
+  
     try {
       const apiRoute = process.env.NEXT_PUBLIC_BACKEND_URL;
-      const response = await axios.post(apiRoute as string, payload);
-      const data = await response.data;
-
-      // Store the data in localStorage
-      localStorage.setItem('surveyResults', JSON.stringify(data));
-
-      // Redirect to the results page
-      router.push('/results');
+      if (!apiRoute) {
+        throw new Error("API route is not defined");
+      }
+      const response = await axios.post(apiRoute, payload);
+      const data = response.data;
+  
+      if (data.error) {
+        setErrorMessage(data.error);
+      } else {
+        localStorage.setItem('surveyResults', JSON.stringify(data));
+        router.push('/results');
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
+
     }
   };
+
   const tabs = [
     {
       title: "Search By Song",
@@ -131,13 +150,16 @@ const SurveyPage = () => {
               ))}
             </div>
             <p className="text-sm sm:text-base">OR</p>
-            <div className="flex w-full gap-2 flex-col lg:flex-row"><Input
-              label="Enter Your Own Song"
-              onChange={(e) => handleInputChange('song', e.target.value)}
-            /><Input
-            label="Enter Artist Name"
-            onChange={(e) => handleInputChange('songArtist', e.target.value)}
-          /></div>
+            <div className="flex w-full gap-2 flex-col lg:flex-row">
+              <Input
+                label="Enter Your Own Song"
+                onChange={(e) => handleInputChange('song', e.target.value)}
+              />
+              <Input
+                label="Enter Artist Name"
+                onChange={(e) => handleInputChange('songArtist', e.target.value)}
+              />
+            </div>
             {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
             <Button onPress={handleSubmit}>Submit</Button>
             <Meteors number={20} />
@@ -227,9 +249,10 @@ const SurveyPage = () => {
       ),
     },
   ];
+
   return (
     <BasePage>
-      <div className="h-[20rem] md:h-[40rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full  items-start justify-start my-2">
+      <div className="h-[20rem] md:h-[40rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full items-start justify-start my-2">
         <Tabs tabs={tabs} />
       </div>
     </BasePage>
