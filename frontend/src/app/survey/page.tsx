@@ -82,18 +82,20 @@ const SurveyPage = () => {
   
     let payload;
     if (song || (customSong && customSongArtist)) {
-      // Option 1: Song and Artist
+      // Option 1: Song and Artist - Using the required format with "-" separator
       payload = {
-        song: song ? `${song.title.toLowerCase()} - ${song.artist.toLowerCase()}` : `${customSong.toLowerCase()} - ${customSongArtist.toLowerCase()}`,
-        artist: "",
+        song: song 
+          ? `${song.title.toLowerCase()} - ${song.artist.toLowerCase()}`
+          : `${customSong.toLowerCase()} - ${customSongArtist.toLowerCase()}`,
+        artist: "",  // Keep these empty as per backend requirements
         genre: ""
       };
     } else if ((artist || customArtist) && (genre || customGenre)) {
       // Option 2: Artist and Genre
       payload = {
-        song: "",
-        artist: artist ? artist.name : customArtist,
-        genre: genre ? genre.name.toLowerCase() : customGenre.toLowerCase()
+        song: "",  // Keep this empty for artist+genre path
+        artist: (artist ? artist.name : customArtist).toLowerCase(),
+        genre: (genre ? genre.name : customGenre).toLowerCase()
       };
     } else {
       setErrorMessage("Invalid input. Please provide either a song and artist, or an artist and genre.");
@@ -101,22 +103,23 @@ const SurveyPage = () => {
     }
   
     try {
-      const apiRoute = process.env.NEXT_PUBLIC_BACKEND_URL;
-      if (!apiRoute) {
-        throw new Error("API route is not defined");
-      }
-      const response = await axios.post(apiRoute, payload);
-      const data = response.data;
-  
-      if (data.error) {
-        setErrorMessage(data.error);
+      const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://garvitcpp-revibe.hf.space/recommend';
+      const response = await axios.post(apiUrl, payload, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'  // Add CORS header
+        }
+      });
+      
+      if (response.data.error) {
+        setErrorMessage(response.data.error);
       } else {
-        localStorage.setItem('surveyResults', JSON.stringify(data));
+        localStorage.setItem('surveyResults', JSON.stringify(response.data));
         router.push('/results');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting form:", error);
-
+      setErrorMessage(error.response?.data?.error || "An error occurred while processing your request.");
     }
   };
 
