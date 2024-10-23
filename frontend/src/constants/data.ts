@@ -23,7 +23,7 @@ const musicData = {
       {
         title: "Chammak Challo",
         artist: "Akon, Hamsika Iyer",
-        image: "https://djravish.com/wp-content/uploads/2023/11/chammak-challo-Flyer.jpg"
+        image: "https://c.saavncdn.com/026/Ra-One-Hindi-2011-500x500.jpg"
       }
     ],
     topArtists: [
@@ -59,7 +59,7 @@ const musicData = {
       },
       {
         name: "Hip-Hop",
-        image: "https://c0.klipartz.com/pngpicture/180/46/sticker-png-damn-album-cover-art-hip-hop-music-others-angle-album-text-logo-rapper.png"
+        image: "https://upload.wikimedia.org/wikipedia/en/b/b4/Encore_%28Eminem_album%29_coverart.jpg"
       },
       {
         name: "Reggaeton",
